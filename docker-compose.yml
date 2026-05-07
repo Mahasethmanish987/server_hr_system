@@ -1,0 +1,84 @@
+services:
+  web:
+    build: .
+    container_name: django_web
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=mysite.settings.settings
+      - POSTGRES_DB=saas_ecommerce_db
+      - POSTGRES_USER=saas_user
+      - POSTGRES_PASSWORD=saas_password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: always
+
+  celery_worker:
+    build: .
+    container_name: celery_worker
+    command: celery -A mysite worker --loglevel=info --concurrency=2
+    volumes:
+      - .:/app
+    environment:
+      - POSTGRES_DB=hr_system
+      - POSTGRES_USER=hr_system
+      - POSTGRES_PASSWORD=hr_system_password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  celery_beat:
+    build: .
+    container_name: celery_beat
+    command: celery -A mysite beat --loglevel=info
+    volumes:
+      - .:/app
+      - beat_data:/var/celery
+    environment:
+      - POSTGRES_DB=hr_system
+      - POSTGRES_USER=hr_system
+      - POSTGRES_PASSWORD=hr_system_password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=hr_system
+      - POSTGRES_USER=hr_system
+      - POSTGRES_PASSWORD=hr_system_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+
+volumes:
+  redis_data:
+  beat_data:
+  postgres_data:
