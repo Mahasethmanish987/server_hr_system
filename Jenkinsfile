@@ -20,7 +20,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main', 
-                    url: 'https://github.com/Mahasethmanish987/server_hr_system.git'
+                    url: 'git@github.com:Mahasethmanish987/server_hr_system.git'
             }
         }
 
