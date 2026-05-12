@@ -1,13 +1,14 @@
-import os
 from datetime import timedelta
+from logging import config
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+from decouple import config
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY")
 
 
-DEBUG = os.environ.get("DEBUG")
+DEBUG = config("DEBUG")
 
 
 ALLOWED_HOSTS = ["*"]
@@ -75,10 +76,10 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DATABASE_NAME"),
-        "USER": os.environ.get("DATABASE_USER"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
-        "HOST": os.environ.get("DATABASE_HOST"),
+        "NAME": config("DATABASE_NAME"),
+        "USER": config("DATABASE_USER"),
+        "PASSWORD": config("DATABASE_PASSWORD"),
+        "HOST": config("DATABASE_HOST"),
         "PORT": "5432",
     }
 }
