@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "analytics_module",
     "sod_eod_module",
 ]
-print("hello womsdfanisdfsSSSdsdfhrldd")
+print("hello womsdfanisdfssdfSSSdsdfhrldd")
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
