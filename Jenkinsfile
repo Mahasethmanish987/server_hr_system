@@ -17,12 +17,7 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
-            steps {
-                git branch: 'main', 
-                    url: 'git@github.com:Mahasethmanish987/server_hr_system.git'
-            }
-        }
+        
 
         stage('Code Quality (Flake8)') {
             steps {
